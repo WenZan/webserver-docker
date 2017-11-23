@@ -1,4 +1,4 @@
-Docker-Django-webServer
+Docker-Django-webApp
 -------
 
-This is a project to deploy a web server quickly using the docker.
+This is a project to deploy a web app quickly using the docker.
