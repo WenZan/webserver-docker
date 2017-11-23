@@ -1,0 +1,43 @@
+version: '3'
+services:
+
+  redis-master:
+    build: ./code/redisMaster
+    image: redis:master
+    container_name: redis-master
+
+  redis-slave1:
+    build: ./code/redisSlave
+    image: redis:slave
+    container_name: redis-slave1
+    depends_on:
+      - redis-master
+    links:
+      - redis-master:master
+
+  
+  redis-slave2:
+    build: ./code/redisSlave
+    image: redis:slave
+    container_name: redis-slave2
+    depends_on:
+      - redis-master
+    links:
+      - redis-master:master
+   
+
+  app:
+    build: ./code/app
+    image: django:app
+    container_name: app
+    volumes:
+      - "./code/app/redisweb:/usr/src/app"
+    depends_on:
+      - redis-master
+    links:
+      - redis-master:db
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000
+
+
