@@ -38,14 +38,27 @@ services:
       - redis-master:db
     command: python manage.py runserver 0.0.0.0:8000
 
+  app1:
+    build: ./code/app1
+    image: django:app1
+    container_name: app1
+    volumes:
+      - "./code/app1/django-cms:/usr/src/app"
+    command: python manage.py runserver 0.0.0.0:8001
+
   HAProxy:
     build: ./code/HAProxy
     image: haproxy:HAProxy
     container_name: HAProxy
     depends_on:
       - app
+      - app1
     links:
       - app:app
+      - app1:app1
     ports:
+      - "6300:6300"
       - "6301:6301"
     command: haproxy -f haproxy.cfg
+
+     
