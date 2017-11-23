@@ -36,8 +36,16 @@ services:
       - redis-master
     links:
       - redis-master:db
-    ports:
-      - "8000:8000"
     command: python manage.py runserver 0.0.0.0:8000
 
-
+  HAProxy:
+    build: ./code/HAProxy
+    image: haproxy:HAProxy
+    container_name: HAProxy
+    depends_on:
+      - app
+    links:
+      - app:app
+    ports:
+      - "6301:6301"
+    command: haproxy -f haproxy.cfg
